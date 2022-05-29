@@ -30,6 +30,40 @@ class _browseState extends State<browse> {
     // });
     return SafeArea(
       child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: 80,
+                child: DrawerHeader(
+                  child: Text(""),
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Item",
+                  style: TextStyle(fontSize: 18),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  "Item",
+                  style: TextStyle(fontSize: 18),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text(
+                  "Item",
+                  style: TextStyle(fontSize: 18),
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
         appBar: AppBar(
           title: const Text("Menu"),
         ),

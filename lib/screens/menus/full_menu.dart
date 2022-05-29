@@ -35,27 +35,34 @@ class _menuListState extends State<menuList> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AspectRatio(
-                    aspectRatio: 3 / 2,
-                    child: Image.asset(
-                      menuItemList[index].image,
-                      alignment: Alignment.centerLeft,
-                    ),
-                  ),
-                  Column(
+                  Row(
                     children: [
-                      Text(
-                        menuItemList[index].title,
-                        style: TextStyle(
-                          fontSize: 17,
+                      AspectRatio(
+                        aspectRatio: 3 / 2,
+                        child: Image.asset(
+                          menuItemList[index].image,
+                          alignment: Alignment.centerLeft,
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        width: 3,
                       ),
-                      Text(
-                        "\$${menuItemList[index].price}",
-                        style: TextStyle(color: Colors.red[700]),
+                      Column(
+                        children: [
+                          Text(
+                            menuItemList[index].title,
+                            style: TextStyle(
+                              fontSize: 17,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "\$${menuItemList[index].price}",
+                            style: TextStyle(color: Colors.red[700]),
+                          ),
+                        ],
                       ),
                     ],
                   ),
