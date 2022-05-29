@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:resturant_app/screens/menus/full_menu.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants.dart';
@@ -56,30 +57,38 @@ class _browseState extends State<browse> {
                   Column(
                     children: [
                       buildCategories(),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
-                      SizedBox(
-                        height: 50,
-                        width: 700,
-                        child: Card(
-                          color: Colors.red[700],
-                          elevation: 5 / 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 0),
-                            child: Text(
-                              "View Our Menu",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
+                      GestureDetector(
+                        child: SizedBox(
+                          height: 50,
+                          width: 700,
+                          child: Card(
+                            color: Colors.red[700],
+                            elevation: 5 / 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 0),
+                              child: Text(
+                                "View Our Menu",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const FoodMenu()));
+                        },
                       ),
                     ],
                   ),
@@ -133,6 +142,7 @@ class _browseState extends State<browse> {
 
   Widget buildCategories() {
     return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
