@@ -18,25 +18,16 @@ final List<category> categoryList = [
   category("assets/images/salad.png", "Salad")
 ];
 
-class menuItem {
-  late final String image;
-  late final String title;
-  late final String price;
+class MenuItem {
+  final String image;
+  final String title;
+  final String price;
   // late final rate;
-  menuItem(this.image, this.title, this.price);
-}
+  const MenuItem(this.image, this.title, this.price);
 
-final List<menuItem> menuItemList = [
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/dessert.png", "Desserts", "77"),
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/burger.png", "burger", "50"),
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/burger.png", "burger", "50"),
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/burger.png", "burger", "50"),
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/burger.png", "burger", "50"),
-  menuItem("assets/images/pizza.png", "pizza", "60"),
-  menuItem("assets/images/burger.png", "burger", "50"),
-];
+  static const List<MenuItem> menuItemList = [
+    MenuItem("assets/images/pizza.png", "pizza", "60"),
+    MenuItem("assets/images/dessert.png", "Desserts", "77"),
+    MenuItem("assets/images/burger.png", "burger", "50"),
+  ];
+}
