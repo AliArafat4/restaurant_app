@@ -5,7 +5,7 @@ import 'package:resturant_app/screens/cart_screen/cart_controller.dart';
 
 class Cart extends StatefulWidget {
   final CartController controller = Get.find();
-
+  final cartController = Get.put(CartController());
   Cart({Key? key}) : super(key: key);
 
   @override
@@ -14,6 +14,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   final CartController controller = Get.find();
+  final cartController = Get.put(CartController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +54,30 @@ class _CartState extends State<Cart> {
                             "\$${controller.meals.keys.toList()[index].price}x${controller.meals.values.toList()[index]}"),
                       ],
                     ),
+                    // IconButton(
+                    //     icon: Icon(
+                    //       Icons.remove_circle,
+                    //       color: Colors.red[700],
+                    //     ),
+                    //     onPressed: () {
+                    //       setState(() {
+                    //         cartController
+                    //             .removeMeal(MenuItem.menuItemList[index]);
+                    //       });
+                    //     }),
+                    // Text("${controller.meals.values.toList()[index]}"),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     Icons.add_circle,
+                    //     color: Colors.red[700],
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       cartController.addMeal(
+                    //           MenuItem.menuItemList[index], 2);
+                    //     });
+                    //   },
+                    // ),
                   ],
                 ),
               ),

@@ -21,13 +21,19 @@ final List<category> categoryList = [
 class MenuItem {
   final String image;
   final String title;
-  final String price;
+  final double price;
+  final String description;
   // late final rate;
-  const MenuItem(this.image, this.title, this.price);
+  const MenuItem(this.image, this.title, this.price, this.description);
 
   static const List<MenuItem> menuItemList = [
-    MenuItem("assets/images/pizza.png", "pizza", "60"),
-    MenuItem("assets/images/dessert.png", "Desserts", "77"),
-    MenuItem("assets/images/burger.png", "burger", "50"),
+    MenuItem("assets/images/pizza.png", "pizza", 60.5,
+        "the best pizza the world with cheese, sauce that you cannot resist and extra peperoni "),
+    MenuItem("assets/images/dessert.png", "Desserts", 77.2, "the best dessert"),
+    MenuItem("assets/images/burger.png", "burger", 50, "the best burger"),
   ];
 }
+
+final double cheese = 3;
+final double hotSauce = 2;
+final double sauce = 0;
