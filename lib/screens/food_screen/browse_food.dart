@@ -64,7 +64,7 @@ class _browseState extends State<browse> {
           SizedBox(
             height: 60,
             child: DrawerHeader(
-              child: Text("    Ali Ahmed",
+              child: Text("\t\tAli Hussain",
                   style: TextStyle(fontSize: 20, color: Colors.red[700])),
             ),
           ),
@@ -104,7 +104,7 @@ class _browseState extends State<browse> {
     );
   }
 
-  SingleChildScrollView buildBody(BuildContext context) {
+  Widget buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -205,7 +205,7 @@ class _browseState extends State<browse> {
     );
   }
 
-  GestureDetector buildViewMenuButton(BuildContext context) {
+  Widget buildViewMenuButton(BuildContext context) {
     return GestureDetector(
       child: SizedBox(
         height: 50,

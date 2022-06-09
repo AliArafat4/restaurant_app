@@ -11,7 +11,7 @@ class start extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(
-        const Duration(seconds: 1),
+        const Duration(milliseconds: 1400),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => const browse(),
             )));
@@ -22,7 +22,7 @@ class start extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedSize(
-              duration: const Duration(milliseconds: 600),
+              duration: const Duration(milliseconds: 700),
               child: Image.asset(
                 "assets/images/logo.png",
                 scale: 2,

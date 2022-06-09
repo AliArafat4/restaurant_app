@@ -1,7 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:resturant_app/constants.dart';
-import 'package:resturant_app/screens/cart_screen/cart_controller.dart';
 
 import 'meal_details_screen.dart';
 
@@ -28,65 +27,145 @@ class menuList extends StatefulWidget {
 }
 
 class _menuListState extends State<menuList> {
-  final cartController = Get.put(CartController());
+  // final cartController = Get.put(CartController());
+
+  final Stream<QuerySnapshot> meals =
+      FirebaseFirestore.instance.collection('meals').snapshots();
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: MenuItem.menuItemList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return SingleChildScrollView(
-          child: SizedBox(
-            height: 90,
-            child: GestureDetector(
-              child: Card(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
+    return StreamBuilder<QuerySnapshot>(
+      stream: meals,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot> snapshot,
+      ) {
+        if (snapshot.hasError) {
+          return Text("Error");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text("Loading")],
+          );
+        }
+        final data = snapshot.requireData;
+        return ListView.builder(
+          itemCount: data.size,
+          itemBuilder: (context, index) {
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: 90,
+                child: GestureDetector(
+                  child: Card(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AspectRatio(
-                          aspectRatio: 3 / 2,
-                          child: Image.asset(
-                            MenuItem.menuItemList[index].image,
-                            alignment: Alignment.centerLeft,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 3,
-                        ),
-                        Column(
+                        Row(
                           children: [
-                            Text(
-                              MenuItem.menuItemList[index].title,
-                              style: TextStyle(
-                                fontSize: 17,
+                            AspectRatio(
+                              aspectRatio: 3 / 2,
+                              child: Image.asset(
+                                data.docs[index]['image'],
+                                alignment: Alignment.centerLeft,
                               ),
                             ),
                             SizedBox(
-                              height: 20,
+                              width: 3,
                             ),
-                            Text(
-                              "\$${MenuItem.menuItemList[index].price}",
-                              style: TextStyle(color: Colors.red[700]),
+                            Column(
+                              children: [
+                                Text(
+                                  data.docs[index]['meal'],
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  "\$${data.docs[index]['price']}",
+                                  style: TextStyle(color: Colors.red[700]),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
+                  onTap: () {
+                    mealDetils(index: index);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => mealDetils(index: index)));
+                  },
                 ),
               ),
-              onTap: () {
-                mealDetils(index: index);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => mealDetils(index: index)));
-              },
-            ),
-          ),
+            );
+          },
         );
       },
     );
+
+    //   ListView.builder(
+    //   itemCount: MenuItem.menuItemList.length,
+    //   itemBuilder: (BuildContext context, int index) {
+    //     return SingleChildScrollView(
+    //       child: SizedBox(
+    //         height: 90,
+    //         child: GestureDetector(
+    //           child: Card(
+    //             child: Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: [
+    //                 Row(
+    //                   children: [
+    //                     AspectRatio(
+    //                       aspectRatio: 3 / 2,
+    //                       child: Image.asset(
+    //                         MenuItem.menuItemList[index].image,
+    //                         alignment: Alignment.centerLeft,
+    //                       ),
+    //                     ),
+    //                     SizedBox(
+    //                       width: 3,
+    //                     ),
+    //                     Column(
+    //                       children: [
+    //                         Text(
+    //                           MenuItem.menuItemList[index].title,
+    //                           style: TextStyle(
+    //                             fontSize: 17,
+    //                           ),
+    //                         ),
+    //                         SizedBox(
+    //                           height: 20,
+    //                         ),
+    //                         Text(
+    //                           "\$${MenuItem.menuItemList[index].price}",
+    //                           style: TextStyle(color: Colors.red[700]),
+    //                         ),
+    //                       ],
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //           onTap: () {
+    //             mealDetils(index: index);
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (context) => mealDetils(index: index)));
+    //           },
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 }

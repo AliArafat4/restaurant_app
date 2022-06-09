@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 final List<String> imgList = [
   "assets/images/deal1.png",
   "assets/images/deal2.png",
@@ -28,10 +30,17 @@ class MenuItem {
 
   static const List<MenuItem> menuItemList = [
     MenuItem("assets/images/pizza.png", "pizza", 60.5,
-        "the best pizza the world with cheese, sauce that you cannot resist and extra peperoni "),
-    MenuItem("assets/images/dessert.png", "Desserts", 77.2, "the best dessert"),
-    MenuItem("assets/images/burger.png", "burger", 50, "the best burger"),
+        "The best pizza in the world with cheese, sauce that you cannot resist and extra peperoni."),
+    MenuItem(
+        "assets/images/dessert.png", "Desserts", 77.2, "The best dessert."),
+    MenuItem("assets/images/burger.png", "burger", 50, "The best burger."),
   ];
+
+  // static MenuItem fromSnapshot(DocumentSnapshot snap) {
+  //   MenuItem menuItemSnap = MenuItem(
+  //       snap['image'], snap['meal'], snap['price'], snap['description']);
+  //   return menuItemSnap;
+  // }
 }
 
 final double cheese = 3;

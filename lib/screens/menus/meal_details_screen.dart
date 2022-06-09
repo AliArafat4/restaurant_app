@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resturant_app/screens/cart_screen/cart_controller.dart';
 
 import '../../constants.dart';
+
+import '../cart_screen/cart.dart';
 
 class mealDetils extends StatefulWidget {
   //to access index we use (widget.index) => basically to use passed info (widget.argumentName)
@@ -16,6 +19,8 @@ class mealDetils extends StatefulWidget {
 
 class _mealDetilsState extends State<mealDetils> {
   final cartController = Get.put(CartController());
+  final Stream<QuerySnapshot> meals =
+      FirebaseFirestore.instance.collection('meals').snapshots();
   final CartController controller = Get.find();
   bool isChecked = false;
   bool isChecked2 = false;
@@ -24,14 +29,66 @@ class _mealDetilsState extends State<mealDetils> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("${MenuItem.menuItemList[widget.index].title} Details"),
+      appBar: AppBar(
+        title: StreamBuilder<QuerySnapshot>(
+          stream: meals,
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<QuerySnapshot> snapshot,
+          ) {
+            if (snapshot.hasError) {
+              return Text("Error");
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Text("Loading")],
+              );
+            }
+            final data = snapshot.requireData;
+            return Text("${data.docs[widget.index]["meal"]} Details");
+          },
         ),
-        body: SingleChildScrollView(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              final cartController = Get.put(CartController());
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Cart()));
+            },
+          ),
+        ],
+      ),
+      body: buildMealDetails(context),
+    );
+  }
+
+  Widget buildMealDetails(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: meals,
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot> snapshot,
+      ) {
+        if (snapshot.hasError) {
+          return Text("Error");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text("Loading")],
+          );
+        }
+        final data = snapshot.requireData;
+
+        return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(MenuItem.menuItemList[widget.index].image),
+              Image.asset(data.docs[widget.index]['image']),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -41,7 +98,7 @@ class _mealDetilsState extends State<mealDetils> {
               ),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(MenuItem.menuItemList[widget.index].description),
+                child: Text(data.docs[widget.index]['description']),
               ),
               Row(
                 children: [
@@ -55,7 +112,7 @@ class _mealDetilsState extends State<mealDetils> {
                     ),
                   ),
                   Text(
-                      "${MenuItem.menuItemList[widget.index].title} \$${MenuItem.menuItemList[widget.index].price}"),
+                      "${data.docs[widget.index]['meal']} \$${data.docs[widget.index]['price']}"),
                 ],
               ),
               Row(
@@ -90,51 +147,20 @@ class _mealDetilsState extends State<mealDetils> {
                   Text("Hot Sauce \$${hotSauce}"),
                 ],
               ),
-              Divider(
-                height: 4,
-                thickness: 1,
-              ),
+              Divider(height: 4, thickness: 1),
               Padding(
                 padding: const EdgeInsets.all(7),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Total is: \$${((price + MenuItem.menuItemList[widget.index].price) * amount).toPrecision(1)}",
+                      "Total is: \$${((price + data.docs[widget.index]['price']) * amount).toPrecision(1)}",
                       style: TextStyle(
                           color: Colors.red[700],
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.remove_circle,
-                            color: Colors.red[700],
-                          ),
-                          onPressed: () {
-                            if (amount > 1) {
-                              setState(() {
-                                amount -= 1;
-                              });
-                            }
-                          },
-                        ),
-                        Text("${amount}"),
-                        IconButton(
-                          icon: Icon(
-                            Icons.add_circle,
-                            color: Colors.red[700],
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              amount += 1;
-                            });
-                          },
-                        ),
-                      ],
-                    )
+                    buildAddRemoveMeals()
                   ],
                 ),
               ),
@@ -143,8 +169,23 @@ class _mealDetilsState extends State<mealDetils> {
                   width: 180,
                   child: ElevatedButton(
                     onPressed: () {
-                      cartController.addMeal(
-                          MenuItem.menuItemList[widget.index], amount);
+                      var mealEntries = controller.meals.entries
+                          .map((meal) => meal.key['meal'])
+                          .toList();
+                      print(mealEntries
+                          .contains(data.docs[widget.index]['meal']));
+                      if (!mealEntries
+                          .contains(data.docs[widget.index]['meal']))
+                        cartController.addMealFromDB(
+                          data.docs[widget.index],
+                          amount,
+                        );
+                      else
+                        cartController.addMealFromDB(
+                          controller.meals.keys.toList()[widget.index],
+                          amount,
+                        );
+                      // print(data.docs[widget.index]['price']);
                     },
                     child: Text("Add to Cart"),
                   ),
@@ -152,6 +193,40 @@ class _mealDetilsState extends State<mealDetils> {
               ),
             ],
           ),
-        ));
+        );
+      },
+    );
+  }
+
+  Widget buildAddRemoveMeals() {
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.remove_circle,
+            color: Colors.red[700],
+          ),
+          onPressed: () {
+            if (amount > 1) {
+              setState(() {
+                amount -= 1;
+              });
+            }
+          },
+        ),
+        Text("${amount}"),
+        IconButton(
+          icon: Icon(
+            Icons.add_circle,
+            color: Colors.red[700],
+          ),
+          onPressed: () {
+            setState(() {
+              amount += 1;
+            });
+          },
+        ),
+      ],
+    );
   }
 }
