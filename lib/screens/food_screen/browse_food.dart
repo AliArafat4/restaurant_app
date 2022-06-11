@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resturant_app/screens/cart_screen/cart.dart';
 import 'package:resturant_app/screens/cart_screen/cart_controller.dart';
+import 'package:resturant_app/screens/menus/category_screen.dart';
 import 'package:resturant_app/screens/menus/full_menu.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants.dart';
+import '../user_screen/login_screen.dart';
 
 class browse extends StatefulWidget {
   const browse({Key? key}) : super(key: key);
@@ -98,6 +100,17 @@ class _browseState extends State<browse> {
               style: TextStyle(fontSize: 18),
             ),
             onTap: () {},
+          ),
+          SizedBox(height: 10),
+          ListTile(
+            title: Text(
+              "Login",
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()));
+            },
           ),
         ],
       ),
@@ -194,7 +207,12 @@ class _browseState extends State<browse> {
               child: GestureDetector(
                 child: Image.asset(categoryList[index].image),
                 onTap: () {
-                  // print("this is ${categoryList[index].title}");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CategoryScreen(
+                                categoryList[index].title,
+                              )));
                 },
               ),
             ),

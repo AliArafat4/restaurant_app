@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
-
 class CartController extends GetxController {
   final _meal = {}.obs;
 

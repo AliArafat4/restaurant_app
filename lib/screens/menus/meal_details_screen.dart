@@ -10,8 +10,9 @@ import '../cart_screen/cart.dart';
 class mealDetils extends StatefulWidget {
   //to access index we use (widget.index) => basically to use passed info (widget.argumentName)
   final int index;
-
-  mealDetils({Key? key, required this.index}) : super(key: key);
+  final data;
+  mealDetils({Key? key, required this.index, required this.data})
+      : super(key: key);
 
   @override
   State<mealDetils> createState() => _mealDetilsState();
@@ -46,8 +47,8 @@ class _mealDetilsState extends State<mealDetils> {
                 children: [Text("Loading")],
               );
             }
-            final data = snapshot.requireData;
-            return Text("${data.docs[widget.index]["meal"]} Details");
+            //final data = snapshot.requireData;
+            return Text("${widget.data.docs[widget.index]["meal"]} Details");
           },
         ),
         actions: [
@@ -82,13 +83,13 @@ class _mealDetilsState extends State<mealDetils> {
             children: [Text("Loading")],
           );
         }
-        final data = snapshot.requireData;
+        // final data = snapshot.requireData;
 
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(data.docs[widget.index]['image']),
+              Image.asset(widget.data.docs[widget.index]['image']),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -98,7 +99,7 @@ class _mealDetilsState extends State<mealDetils> {
               ),
               Padding(
                 padding: const EdgeInsets.all(5),
-                child: Text(data.docs[widget.index]['description']),
+                child: Text(widget.data.docs[widget.index]['description']),
               ),
               Row(
                 children: [
@@ -112,7 +113,7 @@ class _mealDetilsState extends State<mealDetils> {
                     ),
                   ),
                   Text(
-                      "${data.docs[widget.index]['meal']} \$${data.docs[widget.index]['price']}"),
+                      "${widget.data.docs[widget.index]['meal']} \$${widget.data.docs[widget.index]['price']}"),
                 ],
               ),
               Row(
@@ -154,7 +155,7 @@ class _mealDetilsState extends State<mealDetils> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Total is: \$${((price + data.docs[widget.index]['price']) * amount).toPrecision(1)}",
+                      "Total is: \$${((price + widget.data.docs[widget.index]['price']) * amount).toPrecision(1)}",
                       style: TextStyle(
                           color: Colors.red[700],
                           fontWeight: FontWeight.bold,
@@ -169,22 +170,22 @@ class _mealDetilsState extends State<mealDetils> {
                   width: 180,
                   child: ElevatedButton(
                     onPressed: () {
-                      var mealEntries = controller.meals.entries
-                          .map((meal) => meal.key['meal'])
-                          .toList();
-                      print(mealEntries
-                          .contains(data.docs[widget.index]['meal']));
-                      if (!mealEntries
-                          .contains(data.docs[widget.index]['meal']))
-                        cartController.addMealFromDB(
-                          data.docs[widget.index],
-                          amount,
-                        );
-                      else
-                        cartController.addMealFromDB(
-                          controller.meals.keys.toList()[widget.index],
-                          amount,
-                        );
+                      // var mealEntries = controller.meals.entries
+                      //     .map((meal) => meal.key['meal'])
+                      //     .toList();
+                      // print(mealEntries
+                      //     .contains(data.docs[widget.index]['meal']));
+                      // if (!mealEntries
+                      //     .contains(data.docs[widget.index]['meal']))
+                      cartController.addMealFromDB(
+                        widget.data.docs[widget.index],
+                        amount,
+                      );
+                      // else
+                      //   cartController.addMealFromDB(
+                      //     controller.meals.keys.toList(),
+                      //     amount,
+                      //   );
                       // print(data.docs[widget.index]['price']);
                     },
                     child: Text("Add to Cart"),

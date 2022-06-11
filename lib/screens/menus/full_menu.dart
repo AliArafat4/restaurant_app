@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'meal_details_screen.dart';
 
@@ -50,6 +49,10 @@ class _menuListState extends State<menuList> {
           );
         }
         final data = snapshot.requireData;
+        //not nessessary ?
+        if (data.docs.isEmpty) {
+          return Text("empty");
+        }
         return ListView.builder(
           itemCount: data.size,
           itemBuilder: (context, index) {
@@ -96,11 +99,12 @@ class _menuListState extends State<menuList> {
                     ),
                   ),
                   onTap: () {
-                    mealDetils(index: index);
+                    mealDetils(index: index, data: data);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => mealDetils(index: index)));
+                            builder: (context) =>
+                                mealDetils(index: index, data: data)));
                   },
                 ),
               ),
