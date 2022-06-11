@@ -10,6 +10,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants.dart';
 import '../user_screen/login_screen.dart';
+import '../user_screen/sign_up_screen.dart';
 
 class browse extends StatefulWidget {
   const browse({Key? key}) : super(key: key);
@@ -102,6 +103,16 @@ class _browseState extends State<browse> {
             onTap: () {},
           ),
           SizedBox(height: 10),
+          ListTile(
+            title: Text(
+              "Sign-up",
+              style: TextStyle(fontSize: 18),
+            ),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SignUpScreen()));
+            },
+          ),
           ListTile(
             title: Text(
               "Login",

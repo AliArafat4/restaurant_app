@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+import '../food_screen/browse_food.dart';
+
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<SignUpScreen> {
+  final _auth = FirebaseAuth.instance;
   late String email;
   late String password;
 
@@ -15,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("Sign-up"),
       ),
       body: buildEmailFormField(),
     );
@@ -61,11 +65,21 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               print(email);
               print(password);
+              try {
+                final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                if (newUser != null) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => browse()));
+                }
+              } catch (e) {
+                print(e);
+              }
             },
-            child: Text("Login"))
+            child: Text("Register"))
       ],
     ));
   }
