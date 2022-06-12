@@ -4,17 +4,6 @@ import 'package:get/get.dart';
 class CartController extends GetxController {
   final _meal = {}.obs;
 
-  // void addMeal(MenuItem meal, int amount) {
-  //   if (_meal.containsKey(meal)) {
-  //     _meal[meal] += amount;
-  //   } else {
-  //     _meal[meal] = amount;
-  //     Get.snackbar("Meal Added",
-  //         "You have added ${_meal[meal]}x ${meal.title} to the cart",
-  //         duration: Duration(seconds: 2), snackPosition: SnackPosition.BOTTOM);
-  //   }
-  // }
-
   // fix indexing problem
   void addMealFromDB(QueryDocumentSnapshot data, int amount) {
     var mealEntries = _meal.entries.map((meal) => meal.key['meal']).toList();
@@ -25,7 +14,8 @@ class CartController extends GetxController {
       _meal[data] = amount;
       Get.snackbar("Meal Added",
           "You have added ${_meal[data]}x ${data['meal']} to the cart",
-          duration: Duration(seconds: 2), snackPosition: SnackPosition.BOTTOM);
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 
@@ -37,7 +27,8 @@ class CartController extends GetxController {
       _meal.removeWhere((key, value) => key == data);
       Get.snackbar("Meal Removed",
           "You have removed ${mealEntries[index]} from the cart",
-          duration: Duration(seconds: 2), snackPosition: SnackPosition.BOTTOM);
+          duration: const Duration(seconds: 2),
+          snackPosition: SnackPosition.BOTTOM);
     } else {
       _meal[data] -= 1;
     }
@@ -50,8 +41,9 @@ class CartController extends GetxController {
       return _meal.entries
           .map((meal) => meal.key['price'] * meal.value)
           .toList();
-    } else
+    } else {
       return 0;
+    }
   }
 
   get totalPrice {

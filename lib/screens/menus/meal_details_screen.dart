@@ -30,21 +30,25 @@ class _mealDetilsState extends State<mealDetils> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: buildAppBar(context),
+      body: buildMealDetails(context),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
         title: StreamBuilder<QuerySnapshot>(
           stream: meals,
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<QuerySnapshot> snapshot,
-          ) {
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
-              return Text("Error");
+              return const Text("Error");
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Text("Loading")],
+                children: const [Center(child: CircularProgressIndicator())],
               );
             }
             //final data = snapshot.requireData;
@@ -53,34 +57,27 @@ class _mealDetilsState extends State<mealDetils> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              final cartController = Get.put(CartController());
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Cart()));
-            },
-          ),
-        ],
-      ),
-      body: buildMealDetails(context),
-    );
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                final cartController = Get.put(CartController());
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Cart()));
+              }),
+        ]);
   }
 
   Widget buildMealDetails(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: meals,
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<QuerySnapshot> snapshot,
-      ) {
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text("Error");
+          return const Text("Error");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [Text("Loading")],
+            children: const [Center(child: CircularProgressIndicator())],
           );
         }
         // final data = snapshot.requireData;
@@ -90,48 +87,42 @@ class _mealDetilsState extends State<mealDetils> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(widget.data.docs[widget.index]['image']),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Description :",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("Description :",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ),
               Padding(
-                padding: const EdgeInsets.all(5),
-                child: Text(widget.data.docs[widget.index]['description']),
-              ),
-              Row(
-                children: [
-                  Theme(
+                  padding: const EdgeInsets.all(5),
+                  child: Text(widget.data.docs[widget.index]['description'])),
+              Row(children: [
+                Theme(
                     data: Theme.of(context)
                         .copyWith(disabledColor: Colors.red[700]),
-                    child: Radio(
+                    child: const Radio(
                       value: 1,
                       groupValue: 1,
                       onChanged: null,
-                    ),
-                  ),
-                  Text(
-                      "${widget.data.docs[widget.index]['meal']} \$${widget.data.docs[widget.index]['price']}"),
-                ],
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                      value: isChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isChecked = value!;
-                          if (isChecked)
-                            price += cheese;
-                          else
-                            price -= cheese;
-                        });
-                      }),
-                  Text("Extra Cheese \$${cheese}"),
-                ],
-              ),
+                    )),
+                Text(
+                    "${widget.data.docs[widget.index]['meal']} \$${widget.data.docs[widget.index]['price']}"),
+              ]),
+              Row(children: [
+                Checkbox(
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value!;
+                        if (isChecked) {
+                          price += cheese;
+                        } else {
+                          price -= cheese;
+                        }
+                      });
+                    }),
+                Text("Extra Cheese \$${cheese}"),
+              ]),
               Row(
                 children: [
                   Checkbox(
@@ -139,56 +130,43 @@ class _mealDetilsState extends State<mealDetils> {
                       onChanged: (bool? value) {
                         setState(() {
                           isChecked2 = value!;
-                          if (isChecked2)
+                          if (isChecked2) {
                             price += hotSauce;
-                          else
+                          } else {
                             price -= hotSauce;
+                          }
                         });
                       }),
                   Text("Hot Sauce \$${hotSauce}"),
                 ],
               ),
-              Divider(height: 4, thickness: 1),
+              const Divider(height: 4, thickness: 1),
               Padding(
                 padding: const EdgeInsets.all(7),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total is: \$${((price + widget.data.docs[widget.index]['price']) * amount).toPrecision(1)}",
-                      style: TextStyle(
-                          color: Colors.red[700],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    buildAddRemoveMeals()
-                  ],
-                ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Total is: \$${((price + widget.data.docs[widget.index]['price']) * amount).toPrecision(1)}",
+                        style: TextStyle(
+                            color: Colors.red[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      buildAddRemoveMeals()
+                    ]),
               ),
               Center(
                 child: SizedBox(
                   width: 180,
                   child: ElevatedButton(
                     onPressed: () {
-                      // var mealEntries = controller.meals.entries
-                      //     .map((meal) => meal.key['meal'])
-                      //     .toList();
-                      // print(mealEntries
-                      //     .contains(data.docs[widget.index]['meal']));
-                      // if (!mealEntries
-                      //     .contains(data.docs[widget.index]['meal']))
                       cartController.addMealFromDB(
                         widget.data.docs[widget.index],
                         amount,
                       );
-                      // else
-                      //   cartController.addMealFromDB(
-                      //     controller.meals.keys.toList(),
-                      //     amount,
-                      //   );
-                      // print(data.docs[widget.index]['price']);
                     },
-                    child: Text("Add to Cart"),
+                    child: const Text("Add to Cart"),
                   ),
                 ),
               ),
@@ -200,23 +178,19 @@ class _mealDetilsState extends State<mealDetils> {
   }
 
   Widget buildAddRemoveMeals() {
-    return Row(
-      children: [
-        IconButton(
-          icon: Icon(
-            Icons.remove_circle,
-            color: Colors.red[700],
-          ),
-          onPressed: () {
-            if (amount > 1) {
-              setState(() {
-                amount -= 1;
-              });
-            }
-          },
-        ),
-        Text("${amount}"),
-        IconButton(
+    return Row(children: [
+      IconButton(
+        icon: Icon(Icons.remove_circle, color: Colors.red[700]),
+        onPressed: () {
+          if (amount > 1) {
+            setState(() {
+              amount -= 1;
+            });
+          }
+        },
+      ),
+      Text("${amount}"),
+      IconButton(
           icon: Icon(
             Icons.add_circle,
             color: Colors.red[700],
@@ -225,9 +199,7 @@ class _mealDetilsState extends State<mealDetils> {
             setState(() {
               amount += 1;
             });
-          },
-        ),
-      ],
-    );
+          }),
+    ]);
   }
 }
