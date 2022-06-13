@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:resturant_app/screens/user_screen/forget_password_screen.dart';
 import 'package:resturant_app/screens/user_screen/sign_up_screen.dart';
 
 import '../food_screen/browse_food.dart';
@@ -82,6 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   onTap: () {
                     //Forget password screen
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgetPassScreen()));
                     print("henlo");
                   }),
             ),

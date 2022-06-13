@@ -11,6 +11,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants.dart';
 import '../user_screen/login_screen.dart';
+import '../user_screen/profile_screen.dart';
 
 class browse extends StatefulWidget {
   const browse({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _browseState extends State<browse> {
     );
   }
 
-  Drawer buildDrawer() {
+  Widget buildDrawer() {
     return Drawer(
       child: ListView(padding: EdgeInsets.zero, children: [
         SizedBox(
@@ -80,6 +81,18 @@ class _browseState extends State<browse> {
             style: TextStyle(fontSize: 18),
           ),
           onTap: () {},
+        ),
+        const SizedBox(height: 10),
+        ListTile(
+          title: const Text(
+            "Profile",
+            style: TextStyle(fontSize: 18),
+          ),
+          onTap: () {
+            //go to profile screen
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          },
         ),
         const SizedBox(height: 10),
         ListTile(
@@ -110,7 +123,7 @@ class _browseState extends State<browse> {
         StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (FirebaseAuth.instance.currentUser != null) {
                 return ListTile(
                     title: const Text(
                       "Sign-out",
@@ -124,7 +137,7 @@ class _browseState extends State<browse> {
                     });
               } else {
                 return ListTile(
-                    title: const Text(
+                    title: Text(
                       "Login",
                       style: TextStyle(fontSize: 18),
                     ),
