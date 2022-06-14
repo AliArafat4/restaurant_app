@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,8 @@ class _LoginScreenState extends State<SignUpScreen> {
   final _auth = FirebaseAuth.instance;
   late String email;
   late String password;
+  late String phoneNumber;
+  late String name;
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +74,49 @@ class _LoginScreenState extends State<SignUpScreen> {
                 }),
           ),
           const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: TextFormField(
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  // counterText: '${0} characters',
+                  suffixIcon: Icon(Icons.key),
+                  hintText: "Enter Your Name",
+                  labelText: 'Name',
+                ),
+                onChanged: (value) {
+                  //validator ??
+                  name = value;
+                }),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: TextFormField(
+                obscureText: true,
+                keyboardType: TextInputType.number,
+                autocorrect: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  // counterText: '${0} characters',
+                  suffixIcon: Icon(Icons.phone_android),
+                  hintText: "Enter Your Phone Number",
+                  labelText: 'Phone Number',
+                ),
+                onChanged: (value) {
+                  //validator ??
+                  phoneNumber = value;
+                }),
+          ),
+          const SizedBox(height: 10),
           SizedBox(
               width: 120,
               child: ElevatedButton(
                   onPressed: () async {
-                    print(email);
-                    print(password);
+                    createUser(email, name, phoneNumber);
                     SignUp();
                   },
                   child: const Text("Register"))),
@@ -109,10 +149,26 @@ class _LoginScreenState extends State<SignUpScreen> {
     );
   }
 
+  Future createUser(String email, String name, String phone) async {
+    if (email != null && name != null && phone != null) {
+      final users = FirebaseFirestore.instance.collection("users").doc();
+      final json = {
+        'email': email,
+        'name': name,
+        'phone': phone,
+      };
+      await users.set(json);
+    } else {
+      Get.snackbar("Error", "Fields cannot be empty");
+    }
+  }
+
   Future SignUp() async {
     try {
       final newUser = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      final User updateUserName = _auth.currentUser!;
+      updateUserName.updateDisplayName(name);
       if (newUser != null) {
         Get.snackbar("Account Registered Successfully", "",
             duration: const Duration(seconds: 2),

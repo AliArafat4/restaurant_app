@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,7 +34,6 @@ class _browseState extends State<browse> {
       final user = _auth.currentUser!;
       if (user != null) {
         loggedInUser = user;
-        print(loggedInUser?.email!);
       }
     } catch (e) {
       print(e);
@@ -56,6 +57,7 @@ class _browseState extends State<browse> {
     //     }
     //   });
     // });
+
     return SafeArea(
       child: Scaffold(
         drawer: buildDrawer(),
@@ -66,12 +68,17 @@ class _browseState extends State<browse> {
   }
 
   Widget buildDrawer() {
+    // Timer(
+    //     Duration(milliseconds: 1400),
+    //         () => Navigator.pushReplacement(
+    //         context, MaterialPageRoute(builder: (context) => browse())));
+
     return Drawer(
       child: ListView(padding: EdgeInsets.zero, children: [
         SizedBox(
           height: 60,
           child: DrawerHeader(
-            child: Text("\t\t${loggedInUser?.email!}",
+            child: Text("\t\t${loggedInUser?.displayName}",
                 style: TextStyle(fontSize: 20, color: Colors.red[700])),
           ),
         ),
@@ -80,7 +87,10 @@ class _browseState extends State<browse> {
             "Home",
             style: TextStyle(fontSize: 18),
           ),
-          onTap: () {},
+          onTap: () {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => browse()));
+          },
         ),
         const SizedBox(height: 10),
         ListTile(
@@ -90,8 +100,16 @@ class _browseState extends State<browse> {
           ),
           onTap: () {
             //go to profile screen
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()));
+            if (loggedInUser == null) {
+              Get.snackbar("Error", "You are not logged in",
+                  duration: Duration(seconds: 2),
+                  snackPosition: SnackPosition.BOTTOM);
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen()));
+            }
           },
         ),
         const SizedBox(height: 10),
@@ -137,7 +155,7 @@ class _browseState extends State<browse> {
                     });
               } else {
                 return ListTile(
-                    title: Text(
+                    title: const Text(
                       "Login",
                       style: TextStyle(fontSize: 18),
                     ),
