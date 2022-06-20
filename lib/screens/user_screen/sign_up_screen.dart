@@ -173,7 +173,7 @@ class _LoginScreenState extends State<SignUpScreen> {
         Get.snackbar("Account Registered Successfully", "",
             duration: const Duration(seconds: 2),
             snackPosition: SnackPosition.BOTTOM);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => browse()));
       }
     } catch (e) {

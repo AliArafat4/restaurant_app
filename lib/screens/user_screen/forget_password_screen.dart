@@ -45,8 +45,8 @@ class ForgetPassScreen extends StatelessWidget {
   Future ResetPass() async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
-      Get.snackbar("password reset",
-          "you have received and email to reset your password",
+      Get.snackbar(
+          "password reset", "you have received an email to reset your password",
           duration: const Duration(seconds: 2),
           snackPosition: SnackPosition.BOTTOM);
     } catch (e) {

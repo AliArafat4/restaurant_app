@@ -78,7 +78,7 @@ class _browseState extends State<browse> {
         SizedBox(
           height: 60,
           child: DrawerHeader(
-            child: Text("\t\t${loggedInUser?.displayName}",
+            child: Text("\t\t${_auth.currentUser?.displayName}",
                 style: TextStyle(fontSize: 20, color: Colors.red[700])),
           ),
         ),
